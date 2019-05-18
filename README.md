@@ -8,9 +8,9 @@ requests.
 
 [Schemas](#schemas)
 
-[User Guide (TBD)](#user-guide-(tbd))
+[User Guide (TBD)](#user-guide-tbd)
 
-[Known Issues (TBD)](#known-issues-(tbd))
+[Known Issues (TBD)](#known-issues-tbd)
 
 ## Schemas
 

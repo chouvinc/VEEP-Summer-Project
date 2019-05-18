@@ -23,8 +23,7 @@
     <div>
         <form>
             <select class = "menu" id = "tables" name = 'tables'>
-                <option value = "All">All</option>
-                <option value = "Students">Students</option>
+                <option selected value = "Students">Students</option>
                 <option value = "Teams">Teams</option>
                 <option value = "Projects">Projects</option>
                 <option value = "Not For Profits">Not For Profits</option>
@@ -36,6 +35,7 @@
         </form>
     </div>
     <div>
+        {% if test %}
         {% load cust_tags %}
         <table>          
                 <tr>
@@ -116,6 +116,23 @@
                     {% endfor %}
                 </tr>
         </table>
+        {% else %}
+        <table>
+            <!-- Column headers -->
+            <tr>
+                {% for field_name in table_headers %}
+                    <td>{{ field_name }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                {% for datum in data %}
+                    {% for property in datum %}
+                    <td> {{ property }} </td>
+                    {% endfor %}
+                {% endfor %}
+            </tr>
+        </table>
+        {% endif %}
     </div>
 
 </html>
