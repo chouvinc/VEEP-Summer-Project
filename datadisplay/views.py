@@ -1,11 +1,15 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.contrib.staticfiles import finders
 from datadisplay.models import Students
+from datadisplay.utils import string_display
+
+# TODO: There should be a native app context that Django offers. Store everything we store here there instead.
+app_context = {}
+
 
 # Create your views here.
-
-def database_start_page(request): 
-
+def database_start_page(request):
     # TODO: delete this
     # Run this for UI testing (set 'test' to True)
     example = {
@@ -16,15 +20,19 @@ def database_start_page(request):
     'project':['VEEP Database Imporvement', '180 DC', '180 DC', 'VEEP Database Imprpvement', 'Lighthouse Labs', 'Lighthouse Labs', 'TPVH', 'TPVH', 'TPVH', 'Brands for Canada']
     }
 
+    # Add string display to our cache
+    string_display.cache_display_strings(finders.find('string_conversion.json'), app_context)
+
     # Setting up using models to generate table data instead
     students = Students.objects.values_list()
-    table_headers = Students._meta.get_fields()
+    table_headers = string_display.get_strings_from_cache(Students._meta.get_fields(), app_context)
     print(Students._meta.get_fields())
 
     return render(request, 'datadisplay/database_start_page.html', {'example':example, 'test': False, 'data': students, 'table_headers': table_headers})
 
+
 def display_data(request):
-   
+
     # table = request.GET.get('tables')
     # filter_table = request.GET.get('filter')
 
