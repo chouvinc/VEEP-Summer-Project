@@ -124,13 +124,13 @@
                     <td>{{ field_name }}</td>
                 {% endfor %}
             </tr>
-            <tr>
-                {% for datum in data %}
+            {% for datum in data %}
+                <tr>
                     {% for property in datum %}
                     <td> {{ property }} </td>
                     {% endfor %}
-                {% endfor %}
-            </tr>
+                </tr>
+            {% endfor %}
         </table>
         {% endif %}
     </div>

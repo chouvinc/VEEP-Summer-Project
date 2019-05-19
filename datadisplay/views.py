@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.staticfiles import finders
 from datadisplay.models import Students
-from datadisplay.utils import string_display
+from datadisplay.utils import string_display, dummy_data
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
 app_context = {}
@@ -26,7 +26,6 @@ def database_start_page(request):
     # Setting up using models to generate table data instead
     students = Students.objects.values_list()
     table_headers = string_display.get_strings_from_cache(Students._meta.get_fields(), app_context)
-    print(Students._meta.get_fields())
 
     return render(request, 'datadisplay/database_start_page.html', {'example':example, 'test': False, 'data': students, 'table_headers': table_headers})
 
@@ -36,4 +35,4 @@ def display_data(request):
     # table = request.GET.get('tables')
     # filter_table = request.GET.get('filter')
 
-    return render(request, 'datadisplay/database_start_page.html', {'example':example})
+    return render(request, 'datadisplay/database_start_page.html', {'example': example})
