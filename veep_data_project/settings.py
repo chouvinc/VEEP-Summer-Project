@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'veep_data_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'VEEP data display',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
