@@ -1,0 +1,138 @@
+<html lang= "en">
+    
+    <head>
+        <meta charset="utf-8"> 
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'data_display/style_site.css' %}">
+        <title>Veep Database Search Home Page</title>
+    </head> 
+    <div>
+        <body>
+            <h1>Welcome! </h1>
+            <h2>This is the VEEP Database Search Engine</h2> 
+            <p> <br> You can use this search engine to query through data that VEEP has stored to 
+            learn more about the club, projects, student demographics
+            and other available data stored over the years.</p>
+            <h3>Filtering the data using the Filter tool</h3>
+            <p>When filtering the data enter your filter as 'category,value' where the category corresponds to the 
+            the category you want to filter by and the value is what you are filtering for. For example: 'project_name,VEEP Database Improvement' will filter by projects for the Data Display project </p>
+        </body>
+    </div>
+    <div>
+        <form>
+            <select class = "menu" id = "tables" name = 'tables'>
+                <option selected value = "Students">Students</option>
+                <option value = "Teams">Teams</option>
+                <option value = "Projects">Projects</option>
+                <option value = "Not For Profits">Not For Profits</option>
+            </select> 
+    
+    
+            <input type = "text" placeholder= "Filter..." id = "filter" name = "filter" >
+            <input type = "submit">
+        </form>
+    </div>
+    <div>
+        {% if test %}
+        {% load cust_tags %}
+        <table>          
+                <tr>
+                    {% for key, value in example.items %}
+                        <th>
+                            {{key}}
+                        </th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for key, value in example.items %}
+                        <td>
+                            {{ value|index:0 }}    
+                        </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for key, value in example.items %}
+                        <td>
+                            {{ value|index:1 }}    
+                        </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for key, value in example.items %}
+                        <td>
+                            {{ value|index:2 }}    
+                        </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for key, value in example.items %}
+                        <td>
+                            {{ value|index:3 }}    
+                        </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for key, value in example.items %}
+                        <td>
+                            {{ value|index:4 }}    
+                        </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for key, value in example.items %}
+                        <td>
+                            {{ value|index:5 }}    
+                        </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for key, value in example.items %}
+                        <td>
+                            {{ value|index:6 }}    
+                        </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for key, value in example.items %}
+                        <td>
+                            {{ value|index:7 }}    
+                        </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for key, value in example.items %}
+                        <td>
+                            {{ value|index:8 }}    
+                        </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for key, value in example.items %}
+                        <td>
+                            {{ value|index:9 }}    
+                        </td>
+                    {% endfor %}
+                </tr>
+        </table>
+        {% else %}
+        <table>
+            <!-- Column headers -->
+            <tr>
+                {% for field_name in table_headers %}
+                    <td>{{ field_name }}</td>
+                {% endfor %}
+            </tr>
+            {% for datum in data %}
+                <tr>
+                    {% for property in datum %}
+                    <td> {{ property }} </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+
+</html>

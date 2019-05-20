@@ -1,4 +1,4 @@
-from datadisplay.models import Students, Teams, Projects, NotForProfits
+from data_display.models import Students, Teams, Projects, NotForProfits
 from random import randint
 
 # Some constants to use
