@@ -23,8 +23,8 @@ def database_start_page(request):
     # Add string display to our cache
     string_display.cache_display_strings(finders.find('string_conversion.json'), app_context)
 
-    # Setting up using models to generate table data instead
-    data, table_headers = get_objects_by_table(request.GET.get('tables'))
+    # Setting up using models to generate table data instead, defaulting to Students
+    data, table_headers = get_objects_by_table(request.GET.get('tables') or 'Students')
     table_headers = string_display.get_strings_from_cache(table_headers, app_context)
 
     return render(request, 'data_display/database_start_page.html',
