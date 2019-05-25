@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.staticfiles import finders
-from data_display.models import Students
+from data_display.models import Students, Teams, Projects, NotForProfits
 from data_display.utils import string_display, dummy_data
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
@@ -24,10 +24,11 @@ def database_start_page(request):
     string_display.cache_display_strings(finders.find('string_conversion.json'), app_context)
 
     # Setting up using models to generate table data instead
-    students = Students.objects.values_list()
-    table_headers = string_display.get_strings_from_cache(Students._meta.get_fields(), app_context)
+    data, table_headers = get_objects_by_table(request.GET.get('tables'))
+    table_headers = string_display.get_strings_from_cache(table_headers, app_context)
 
-    return render(request, 'data_display/database_start_page.html', {'example':example, 'test': False, 'data': students, 'table_headers': table_headers})
+    return render(request, 'data_display/database_start_page.html',
+                  {'example': example, 'test': False, 'data': data, 'table_headers': table_headers})
 
 
 def display_data(request):
@@ -36,3 +37,13 @@ def display_data(request):
     # filter_table = request.GET.get('filter')
 
     return render(request, 'data_display/database_start_page.html', {'example': example})
+
+
+# Should move this to a model-layer module (this is the resource layer)
+def get_objects_by_table(table_name):
+    return {
+        'Students': (Students.objects.values_list(), Students._meta.get_fields()),
+        'Teams': (Teams.objects.values_list(), Teams._meta.get_fields()),
+        'Projects': (Projects.objects.values_list(), Projects._meta.get_fields()),
+        'Not For Profits': (NotForProfits.objects.values_list(), NotForProfits._meta.get_fields())
+    }[table_name]
