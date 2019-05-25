@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-
+photo = models.ImageField(upload_to="gallery")
 
 class Students(models.Model):
     student_id = models.IntegerField()
