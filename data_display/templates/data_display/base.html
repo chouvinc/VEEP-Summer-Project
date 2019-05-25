@@ -1,0 +1,39 @@
+<html lang= "en">
+    <head>
+        <meta charset="utf-8">
+        <meta name = "viewport" content = "width = device-width, initial-scale = 1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        {% load static %}
+
+        {% block stylesheets %}
+
+        {% endblock stylesheets %}
+
+        <link rel="stylesheet" href="{% static 'data_display/base.css' %}">
+        <title>Veep Database Search Home Page</title>
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+    <div class="header">
+        <ul class="headerItems">
+            <a href=""><li>Database</li></a>
+            <a href=""><li>Summaries</li></a>
+            <a href=""><li>Visualizations</li></a>
+            <a href=""><li>Export</li></a>
+        </ul>
+    </div>
+
+    {% block content %}
+    <div class="content">
+
+    </div>
+    {% endblock content %}
+
+    <div class="footer">
+        <h1>HELLO THIS IS FOOTER</h1>
+    </div>
+
+    </body>
+</html>

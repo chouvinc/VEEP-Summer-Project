@@ -1,0 +1,14 @@
+.header {
+    width: 100%;
+    color: gray;
+}
+
+ul a {
+  text-decoration: none;
+  list-style: none;
+  display: inline-block;
+}
+
+a:visited {
+  color: gray;
+}
