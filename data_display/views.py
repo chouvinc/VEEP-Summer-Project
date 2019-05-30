@@ -1,38 +1,42 @@
-from django.http import HttpResponse
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.contrib.staticfiles import finders
 from data_display.models import Students, Teams, Projects, NotForProfits
 from data_display.utils import string_display, dummy_data
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
-app_context = {}
+app_context = {'existing_query_params': "Students"}
+# this will be changed via settings view in the future
+RESULTS_PER_PAGE = 10
 
 
 # Create your views here.
 def database_start_page(request):
-    # TODO: delete this
-    # Run this for UI testing (set 'test' to True)
-    example = {
-    'student_id': [1005243844, 10067329845, 1009289304, 1009283681, 1002736541, 1009872837, 1008227736, 1009988374, 1002938823, 1001010267], 
-    'name': ['Bushi Dokaj', 'Peter Parker', 'Susan Summer', 'Leif Hebel', 'Carita Stringfellow', 'Ronny Newhouse', 'Chris Charis', 'Carlton Cockrum', 'Willy Hutchins','Orval Cooks'],  
-    'discipline': ['Industrial','Mech','Mech','ECE', 'ECE','Industrial', 'Mech', 'Chem', 'ECE','ECE'],
-    'year': ['2T2', '2T1', '1T9','1T9','2T0','1T9','2T1','2T1', '1T9','1T9'],
-    'project':['VEEP Database Imporvement', '180 DC', '180 DC', 'VEEP Database Imprpvement', 'Lighthouse Labs', 'Lighthouse Labs', 'TPVH', 'TPVH', 'TPVH', 'Brands for Canada']
-    }
-
     # Add string display to our cache
     string_display.cache_display_strings(finders.find('string_conversion.json'), app_context)
 
     # Setting up using models to generate table data instead, defaulting to Students
-    data, table_headers = get_objects_by_table(request.GET.get('tables') or 'Students')
+    # TODO: replace query parameters with django form data, will make pagination logic less confusing
+    # TODO: remove additional or existing query params after django forms
+    existing_query_params = app_context['existing_query_params']
+    new_query_params = request.GET.get('tables') or existing_query_params
+
+    data, table_headers = get_objects_by_table(new_query_params)
+
+    app_context['existing_query_params'] = new_query_params
     table_headers = string_display.get_strings_from_cache(table_headers, app_context)
 
+    # paginator is 1-based indexing (yikes)
+    page_number = request.GET.get('page') or 1
+    paginator = Paginator(data, RESULTS_PER_PAGE)
+
+    subset_data = paginator.page(page_number)
+
     return render(request, 'data_display/database_start_page.html',
-                  {'example': example, 'test': False, 'data': data, 'table_headers': table_headers})
+                  {'data': subset_data, 'table_headers': table_headers})
 
 
 def display_data(request):
-
     # table = request.GET.get('tables')
     # filter_table = request.GET.get('filter')
 

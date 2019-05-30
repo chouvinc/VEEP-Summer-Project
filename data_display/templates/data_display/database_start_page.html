@@ -33,88 +33,6 @@
     </form>
 </div>
 <div>
-    {% if test %}
-    {% load cust_tags %}
-    <table>
-            <tr>
-                {% for key, value in example.items %}
-                    <th>
-                        {{key}}
-                    </th>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:0 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:1 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:2 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:3 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:4 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:5 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:6 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:7 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:8 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:9 }}
-                    </td>
-                {% endfor %}
-            </tr>
-    </table>
-    {% else %}
     <table>
         <!-- Column headers -->
         <tr>
@@ -130,6 +48,23 @@
             </tr>
         {% endfor %}
     </table>
-    {% endif %}
+
+    <div class="pagination">
+        <span class="page-links">
+            {% if data.has_previous %}
+                <a href="?page=1"><<</a>
+                <a href="?page={{ data.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ data.number }} of {{ data.paginator.num_pages }}
+            </span>
+
+            {% if data.has_next %}
+                <a href="?page={{ data.next_page_number }}">Next</a>
+                <a href="?page={{ data.paginator.num_pages }}">>></a>
+            {% endif %}
+        </span>
+    </div>
 </div>
 {% endblock content %}
