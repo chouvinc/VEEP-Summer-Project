@@ -5,9 +5,9 @@ from data_display.models import Students, Teams, Projects, NotForProfits
 from data_display.utils import string_display, dummy_data
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
-app_context = {'existing_query_params': "Students"}
+app_context = {'existing_query_params': "Students", 'pagination_width': 2}
 # this will be changed via settings view in the future
-RESULTS_PER_PAGE = 10
+RESULTS_PER_PAGE = 25
 
 
 # Create your views here.
@@ -32,8 +32,12 @@ def database_start_page(request):
 
     subset_data = paginator.page(page_number)
 
+    pages = get_pagination_ranges(paginator, int(page_number))
+
     return render(request, 'data_display/database_start_page.html',
-                  {'data': subset_data, 'table_headers': table_headers})
+                  {'data': subset_data, 'table_headers': table_headers,
+                   'pages': pages}
+                  )
 
 
 def display_data(request):
@@ -51,3 +55,15 @@ def get_objects_by_table(table_name):
         'Projects': (Projects.objects.values_list(), Projects._meta.get_fields()),
         'Not For Profits': (NotForProfits.objects.values_list(), NotForProfits._meta.get_fields())
     }[table_name]
+
+
+def get_pagination_ranges(paginator, curr_page):
+    total_pages = paginator.num_pages
+    pages = {'left': [], 'right': []}
+
+    if curr_page - 1 > 1:
+        pages['left'] = [curr_page - 2, curr_page - 1]
+    if total_pages - curr_page > 1:
+        pages['right'] = [curr_page + 1, curr_page + 2]
+
+    return pages

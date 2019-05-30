@@ -1,5 +1,5 @@
 #image {
-  top: 500
+  top: 500px;
 }
 
 #header {
@@ -28,7 +28,7 @@ tr:nth-child(even) {
 
 h1 {
   right: 50px;
-  left: 50 px;
+  left: 50px;
   padding: 12px 20px;
   background-color: rgb(114, 81, 138);
   display: inline-block;
@@ -65,3 +65,31 @@ input[type=submit] {
 input[type=submit]:hover {
   background-color: rgb(114, 81, 138);
  }
+
+/* Pagination stuff down here */
+
+.pagination {
+    text-align: center;
+    margin: 25px 10px 10px 10px;
+    font-size: 1.25em;
+}
+
+.pagination .page-item {
+    padding: 5px 15px;
+    border-radius: 10px;
+}
+
+.pagination a {
+    text-decoration: none;
+    color: #222222;
+}
+
+.pagination .current {
+    border-bottom: 1px solid purple;
+    font-weight: bold;
+    padding: 5px 15px;
+}
+
+.pagination .page-item:hover {
+    background-color: #eeeeee;
+}
