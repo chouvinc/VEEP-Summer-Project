@@ -35,9 +35,9 @@
 <div>
     <table>
         <!-- Column headers -->
-        <tr>
+        <tr class="col-headers">
             {% for field_name in table_headers %}
-                <td>{{ field_name }}</td>
+                <td>{{ field_name }} <i class="fas fa-caret-down"></i></td>
             {% endfor %}
         </tr>
         {% for datum in data %}
@@ -52,9 +52,9 @@
     <div class="pagination">
         <span class="page-links">
             {% if data.has_previous %}
-                <span class="page-item"><a href="?page=1"><<</a></span>
+                <a href="?page=1"><span class="page-item"><<</span></a>
                 {% for page in pages.left %}
-                    <span class="page-item"><a href="?page={{ page }}">{{ page }}</a></span>
+                    <a href="?page={{ page }}"><span class="page-item">{{ page }}</span></a>
                 {% endfor %}
             {% endif %}
 
@@ -62,9 +62,9 @@
 
             {% if data.has_next %}
                 {% for page in pages.right %}
-                    <span class="page-item"><a href="?page={{ page }}">{{ page }}</a></span>
+                    <a href="?page={{ page }}"><span class="page-item">{{ page }}</span></a>
                 {% endfor %}
-                <span class="page-item"><a href="?page={{ data.paginator.num_pages }}">>></a></span>
+                <a href="?page={{ data.paginator.num_pages }}"><span class="page-item">>></span></a>
             {% endif %}
         </span>
     </div>

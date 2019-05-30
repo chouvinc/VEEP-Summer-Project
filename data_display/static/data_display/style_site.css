@@ -10,22 +10,6 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-td, th {
-  border: 3px solid rgb(114, 81, 138);
-  text-align: left;
-  padding: 10px;
-}
-
-tr:nth-child(even) {
-  background-color: rgba(221, 221, 221, 0.692);
-}
-
 h1 {
   right: 50px;
   left: 50px;
@@ -66,6 +50,38 @@ input[type=submit]:hover {
   background-color: rgb(114, 81, 138);
  }
 
+/* Table stuff goes here */
+
+tr:nth-child(even) {
+    background-color: rgba(221, 221, 221, 0.692);
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 3px solid rgb(114, 81, 138);
+  text-align: left;
+  padding: 10px;
+}
+
+.col-headers td {
+    border-left: none;
+    border-right: none;
+    font-weight: bold;
+}
+
+.col-headers td:first-child {
+    border-left: 3px solid rgb(114, 81, 138);
+}
+
+.col-headers td:last-child {
+    border-right: 3px solid rgb(114, 81, 138);
+}
+
 /* Pagination stuff down here */
 
 .pagination {
@@ -76,7 +92,7 @@ input[type=submit]:hover {
 
 .pagination .page-item {
     padding: 5px 15px;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 .pagination a {
@@ -84,12 +100,18 @@ input[type=submit]:hover {
     color: #222222;
 }
 
-.pagination .current {
-    border-bottom: 1px solid purple;
+span[class='current'] {
     font-weight: bold;
     padding: 5px 15px;
+    border-radius: 5px;
+    border: 3px solid rgb(114, 81, 138);
+    /* Couldn't figure out why this wasn't working as intended, revisit later as not that important */
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 
 .pagination .page-item:hover {
     background-color: #eeeeee;
+    color: rgb(114, 81, 138);
 }
