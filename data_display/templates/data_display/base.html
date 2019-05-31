@@ -19,18 +19,19 @@
 
     <div class="header">
         <ul class="headerItems">
-            <a href=""><li>Database</li></a>
-            <a href=""><li>Summaries</li></a>
-            <a href=""><li>Visualizations</li></a>
-            <a href=""><li>Export</li></a>
+            <a href=""><li class="page">Database</li></a>
+            <a href=""><li class="page">Summaries</li></a>
+            <a href=""><li class="page">Visualizations</li></a>
+            <a href=""><li class="page">Export</li></a>
         </ul>
     </div>
 
-    {% block content %}
-    <div class="content">
 
+    <div class="content">
+        {% block content %}
+        {% endblock content %}
     </div>
-    {% endblock content %}
+
 
     <div class="footer">
         <div class="center-content">Developed & Maintained by the VEEP Database Team &nbsp | &nbsp 2019 ©</div>

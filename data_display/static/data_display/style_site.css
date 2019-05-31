@@ -10,21 +10,6 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
-h1 {
-  right: 50px;
-  left: 50px;
-  padding: 12px 20px;
-  background-color: rgb(114, 81, 138);
-  display: inline-block;
-}
-
-h2, p {
-  right: 50px;
-  left: 50px;
-  padding: 12px 20px;
-  display: inline-block
-}
-
 input[type=text], select {
     width: 100%;
     padding: 12px 20px;
