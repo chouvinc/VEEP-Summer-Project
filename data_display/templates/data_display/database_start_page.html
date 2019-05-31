@@ -35,7 +35,9 @@
         <!-- Column headers -->
         <tr class="col-headers">
             {% for field_name in table_headers %}
-                <td>{{ field_name }} <i class="fas fa-caret-down"></i></td>
+                <td><a href="?page={{ pages.current }}&sort={{ field_name }}">
+                    {{ field_name }} <i class="fas fa-caret-down"></i>
+                </a></td>
             {% endfor %}
         </tr>
         {% for datum in data %}
