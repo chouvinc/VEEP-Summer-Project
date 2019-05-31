@@ -36,7 +36,14 @@
         <tr class="col-headers">
             {% for field_name in table_headers %}
                 <td><a href="?page={{ pages.current }}&sort={{ field_name }}">
-                    {{ field_name }} <i class="fas fa-caret-down"></i>
+                    {{ field_name }}
+                    {% if field_name == ui.asc %}
+                        <i class="fas fa-caret-square-down"></i>
+                    {% elif field_name == ui.desc %}
+                        <i class="fas fa-caret-square-up"></i>
+                    {% else %}
+                        <i class="fas fa-caret-down"></i>
+                    {% endif %}
                 </a></td>
             {% endfor %}
         </tr>

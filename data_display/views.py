@@ -5,7 +5,8 @@ from data_display.models import Students, Teams, Projects, NotForProfits
 from data_display.utils import string_display
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
-app_context = {'last_table': "", 'pagination_width': 2, 'last_data': [], 'last_headers': []}
+app_context = {'last_table': "", 'pagination_width': 2, 'last_data': [], 'last_headers': [], 'last_sort': '',
+               'ui_obj': {'asc': '', 'desc': ''}}
 # this will be changed via settings view in the future
 RESULTS_PER_PAGE = 25
 
@@ -21,9 +22,8 @@ def database_start_page(request):
     table = request.GET.get('table') or 'Students'
 
     if sort_by:
-        data, table_headers = get_objects_by_table_and_sort(table,
-                                                            string_display.get_strings_from_cache([sort_by],
-                                                                                                  app_context)[0])
+        sort_by = toggle_sort(sort_by, app_context)
+        data, table_headers = get_objects_by_table_and_sort(table, sort_by)
         app_context['last_data'], app_context['last_headers'] = data, table_headers
     elif not page_number or not app_context['last_data']:
         data, table_headers = get_objects_by_table(table)
@@ -40,10 +40,10 @@ def database_start_page(request):
     subset_data = paginator.page(page_number)
 
     pages = get_pagination_ranges(paginator, int(page_number))
-    return render(request, 'data_display/database_start_page.html',
-                  {'data': subset_data, 'table_headers': table_headers,
-                   'pages': pages}
-                  )
+    return render(
+        request, 'data_display/database_start_page.html',
+        {'data': subset_data, 'table_headers': table_headers, 'pages': pages, 'ui': app_context['ui_obj']}
+    )
 
 
 def display_data(request):
@@ -82,3 +82,18 @@ def get_pagination_ranges(paginator, curr_page):
         pages['right'] = [curr_page + 1, curr_page + 2]
 
     return pages
+
+
+def toggle_sort(sort_by, context):
+    asc_sort = string_display.get_strings_from_cache([sort_by], context)[0]
+    if context['last_sort'] == asc_sort:
+        # already sorted this column -- toggle so desc
+        desc_sort = '-' + asc_sort
+        context['last_sort'] = desc_sort
+        context['ui_obj']['desc'] = sort_by
+        return desc_sort
+    else:
+        # first time we sort, or previous was desc (in which case column doesn't match), do nothing
+        context['last_sort'] = asc_sort
+        context['ui_obj']['asc'] = sort_by
+        return asc_sort
