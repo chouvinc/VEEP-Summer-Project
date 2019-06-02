@@ -6,17 +6,18 @@
 {% endblock stylesheets %}
 
 {% block content %}
-<div>
-    <body>
-        <h1>Welcome! </h1>
+<div class="welcome-text">
+    <h1 class="floater"><i class="fas fa-info-circle"></i></h1>
+    <div>
+        <h1>Welcome!</h1>
         <h2>This is the VEEP Database Search Engine</h2>
-        <p> <br> You can use this search engine to query through data that VEEP has stored to
+        <p> You can use this search engine to query through data that VEEP has stored to
         learn more about the club, projects, student demographics
         and other available data stored over the years.</p>
         <h3>Filtering the data using the Filter tool</h3>
         <p>When filtering the data enter your filter as 'category,value' where the category corresponds to the
         the category you want to filter by and the value is what you are filtering for. For example: 'project_name,VEEP Database Improvement' will filter by projects for the Data Display project </p>
-    </body>
+    </div>
 </div>
 <div>
     <form>
@@ -33,93 +34,20 @@
     </form>
 </div>
 <div>
-    {% if test %}
-    {% load cust_tags %}
-    <table>
-            <tr>
-                {% for key, value in example.items %}
-                    <th>
-                        {{key}}
-                    </th>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:0 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:1 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:2 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:3 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:4 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:5 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:6 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:7 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:8 }}
-                    </td>
-                {% endfor %}
-            </tr>
-            <tr>
-                {% for key, value in example.items %}
-                    <td>
-                        {{ value|index:9 }}
-                    </td>
-                {% endfor %}
-            </tr>
-    </table>
-    {% else %}
     <table>
         <!-- Column headers -->
-        <tr>
+        <tr class="col-headers">
             {% for field_name in table_headers %}
-                <td>{{ field_name }}</td>
+                <td><a href="?page={{ pages.current }}&sort={{ field_name }}">
+                    {{ field_name }}
+                    {% if field_name == ui.asc %}
+                        <i class="fas fa-caret-square-down"></i>
+                    {% elif field_name == ui.desc %}
+                        <i class="fas fa-caret-square-up"></i>
+                    {% else %}
+                        <i class="fas fa-caret-down"></i>
+                    {% endif %}
+                </a></td>
             {% endfor %}
         </tr>
         {% for datum in data %}
@@ -130,6 +58,25 @@
             </tr>
         {% endfor %}
     </table>
-    {% endif %}
+
+    <div class="pagination">
+        <span class="page-links">
+            {% if data.has_previous %}
+                <a href="?page=1"><span class="page-item"><<</span></a>
+                {% for page in pages.left %}
+                    <a href="?page={{ page }}"><span class="page-item">{{ page }}</span></a>
+                {% endfor %}
+            {% endif %}
+
+            <span class="current">{{ data.number }}</span>
+
+            {% if data.has_next %}
+                {% for page in pages.right %}
+                    <a href="?page={{ page }}"><span class="page-item">{{ page }}</span></a>
+                {% endfor %}
+                <a href="?page={{ data.paginator.num_pages }}"><span class="page-item">>></span></a>
+            {% endif %}
+        </span>
+    </div>
 </div>
 {% endblock content %}

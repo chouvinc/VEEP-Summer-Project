@@ -12,27 +12,29 @@
         <link rel="stylesheet" href="{% static 'data_display/base.css' %}">
         <title>Veep Database Search Home Page</title>
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'data_display/all.css' %}">
     </head>
 
     <body>
 
     <div class="header">
         <ul class="headerItems">
-            <a href=""><li>Database</li></a>
-            <a href=""><li>Summaries</li></a>
-            <a href=""><li>Visualizations</li></a>
-            <a href=""><li>Export</li></a>
+            <a href=""><li class="page">Database</li></a>
+            <a href=""><li class="page">Summaries</li></a>
+            <a href=""><li class="page">Visualizations</li></a>
+            <a href=""><li class="page">Import/Export</li></a>
         </ul>
     </div>
 
-    {% block content %}
-    <div class="content">
 
+    <div class="content">
+        {% block content %}
+        {% endblock content %}
     </div>
-    {% endblock content %}
+
 
     <div class="footer">
-        <h1>HELLO THIS IS FOOTER</h1>
+        <div class="center-content">Developed & Maintained by the VEEP Database Team &nbsp | &nbsp 2019 ©</div>
     </div>
 
     </body>
