@@ -11,7 +11,7 @@ app_context = {'last_table': "", 'pagination_width': 2, 'last_data': [], 'last_h
 RESULTS_PER_PAGE = 25
 
 
-# Create your views here.
+# ================= Views =================
 def database_start_page(request):
     # Add string display to our cache
     string_display.cache_display_strings(finders.find('string_conversion.json'), app_context)
@@ -53,6 +53,10 @@ def display_data(request):
     return render(request, 'data_display/database_start_page.html', {'example': example})
 
 
+def summaries(request):
+    return render(request, 'data_display/summaries.html', {'test': 'Hello world'})
+
+# ================= Functions That Should Probably Be Elsewhere =================
 # Should move this to a model-layer module (this is the resource layer)
 def get_objects_by_table(table_name):
     return {

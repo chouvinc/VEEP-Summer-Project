@@ -1,0 +1,11 @@
+{% extends "data_display/base.html" %}
+
+{% block stylesheets %}
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'data_display/summaries.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+    Welcome to the summaries page =)
+    Testing to see if templating is working {{ test }}
+{% endblock %}
