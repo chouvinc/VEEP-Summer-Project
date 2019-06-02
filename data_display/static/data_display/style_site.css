@@ -35,6 +35,19 @@ input[type=submit]:hover {
   background-color: rgb(114, 81, 138);
  }
 
+/* Welcome text stuff goes here */
+
+.welcome-text {
+    margin: 30px 0;
+    background-color: #eeeeee;
+    padding: 10px 40px;
+    border-radius: 5px;
+}
+
+.welcome-text .floater {
+    float: right;
+}
+
 /* Table stuff goes here */
 
 tr:nth-child(even) {
