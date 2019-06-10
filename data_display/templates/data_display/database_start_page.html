@@ -9,7 +9,7 @@
 <div class="welcome-text">
     <h1 class="floater"><i class="fas fa-info-circle"></i></h1>
     <div>
-        <h1>Welcome!</h1>
+        <h1><img id="image" src="/media/VEEP_logo.jpg" alt="veep logo" width="100">Welcome!</h1>
         <h2>This is the VEEP Database Search Engine</h2>
         <p> You can use this search engine to query through data that VEEP has stored to
         learn more about the club, projects, student demographics
@@ -20,7 +20,7 @@
     </div>
 </div>
 <div>
-    <form action={% url 'data_display' %} method="GET">
+    <form action= {% url 'data_display' %} method="GET">
         {{ form }}
         <input type = "submit">
     </form>
@@ -54,7 +54,7 @@
     <div class="pagination">
         <span class="page-links">
             {% if data.has_previous %}
-                <a href="?page=1"><span class="page-item"><<</span></a>
+                <a href="?page=1"><span class="page-item"></span></a>
                 {% for page in pages.left %}
                     <a href="?page={{ page }}"><span class="page-item">{{ page }}</span></a>
                 {% endfor %}

@@ -7,6 +7,6 @@ class QueryTable(forms.Form):
     filter = forms.CharField(label="filter", max_length=100, required=False)
 
 
-class SettingsForm():
+class SettingsForm(forms.Form):
     rows_per_page = forms.ChoiceField(label="rows per page",
     choices=[(10,'10'),(25,'25'),(50,'50'),(100,'100')])

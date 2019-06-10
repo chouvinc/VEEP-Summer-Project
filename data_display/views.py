@@ -4,17 +4,27 @@ from django.contrib.staticfiles import finders
 from data_display.models import Students, Teams, Projects, NotForProfits
 from data_display.utils import string_display
 from data_display.forms import QueryTable, SettingsForm
+from veep_data_project.settings import rows_per_page
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
 app_context = {'last_table': "", 'last_filter': "", 'pagination_width': 2, 'last_data': [], 'last_headers': [], 'last_sort': '',
                'ui_obj': {'asc': '', 'desc': ''}}
-# this will be changed via settings view in the future
-RESULTS_PER_PAGE = 25
 FIRST = True
+
+def settings(request):
+    if request.method == "GET":
+        form = SettingsForm(request.GET)
+        if form.is_valid():
+            global rows_per_page
+            rows_per_page = form.cleaned_data['rows_per_page']
+    else:
+        form = SettingsForm()
+    return render(request, 'data_display/settings.html', {'form':form})
 
 
 # Create your views here.
 def data_display(request):
+
     # Add string display to our cache
     string_display.cache_display_strings(finders.find('string_conversion.json'), app_context)
 
@@ -52,7 +62,7 @@ def data_display(request):
     table_headers = string_display.get_strings_from_cache(table_headers, app_context)
 
     # paginator is 1-based indexing (yikes)
-    paginator = Paginator(data, RESULTS_PER_PAGE)
+    paginator = Paginator(data, rows_per_page)
     pages = get_pagination_ranges(paginator, page_number)
     subset_data = paginator.page(page_number)
 
