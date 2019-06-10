@@ -6,10 +6,6 @@
   background-color:rgb(114, 81, 138);
 }
 
-body {
-  font-family: 'Source Sans Pro', sans-serif;
-}
-
 input[type=text], select {
     width: 100%;
     padding: 12px 20px;

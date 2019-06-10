@@ -1,0 +1,55 @@
+{% extends "data_display/base.html" %}
+
+{% block stylesheets %}
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'data_display/import_export.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+    <div class="content">
+        <div class="info-text">
+            <h1 class="floater">
+                <i class="fas fa-info-circle"></i>
+                <h2 class="info-text-title">Import</h2>
+            </h1>
+
+            <div>
+                Import your data into the database! It's as simple as providing a link to the Google Sheet.
+                Select the type of import according to the user guide and get a sneak peek of the data changes!
+            </div>
+
+
+        </div>
+
+        <div class="">
+            <h2>Note:</h2>
+        </div>
+
+        <div class="io-form">
+            <form action='{% url 'data_display' %}{{ i_form_type }}' method="POST">
+                {% csrf_token %}
+                {{ i_form }}
+                <input type = "submit">
+            </form>
+        </div>
+
+        <div class="info-text">
+            <h1 class="floater">
+                <i class="fas fa-info-circle"></i>
+                <h2 class="info-text-title">Export</h2>
+            </h1>
+
+            <div>
+                Export your data into other formats! Currently under development, but future plans include popular
+                file formats such as .csv, .xls, .txt, and .json.
+            </div>
+        </div>
+
+        <div class="io-form">
+            <form action='{% url 'data_display' %}{{ e_form_type }}' method="GET">
+                {{ e_form }}
+                <input type = "submit">
+            </form>
+        </div>
+    </div>
+{% endblock %}
