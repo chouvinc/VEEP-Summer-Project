@@ -1,9 +1,11 @@
 from django import forms
 
+
 class QueryTable(forms.Form):
-    table_choice = forms.ChoiceField(label="table",
-    choices=[('Students','Students'), ('Projects', 'Projects'), ('Teams', 'Teams'), ('Not for Profits', 'Not for Profits')])
-    filter_table = forms.CharField(label="filter", max_length=100)
+    table = forms.ChoiceField(label="table",
+    choices=[('Students','Students'), ('Projects', 'Projects'), ('Teams', 'Teams'), ('Not For Profits', 'Not For Profits')])
+    filter = forms.CharField(label="filter", max_length=100, required=False)
+
 
 class SettingsForm():
     rows_per_page = forms.ChoiceField(label="rows per page",

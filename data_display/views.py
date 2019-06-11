@@ -6,61 +6,60 @@ from data_display.utils import string_display
 from data_display.forms import QueryTable, SettingsForm
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
-app_context = {'last_table': "", 'pagination_width': 2, 'last_data': [], 'last_headers': [], 'last_sort': '',
+app_context = {'last_table': "", 'last_filter': "", 'pagination_width': 2, 'last_data': [], 'last_headers': [], 'last_sort': '',
                'ui_obj': {'asc': '', 'desc': ''}}
 # this will be changed via settings view in the future
 RESULTS_PER_PAGE = 25
+FIRST = True
 
 
 # Create your views here.
-def database_start_page(request):
+def data_display(request):
     # Add string display to our cache
     string_display.cache_display_strings(finders.find('string_conversion.json'), app_context)
 
-    # Check for all the query parameters
-    sort_by = request.GET.get('sort')
-    page_number = request.GET.get('page')
-    #table = request.GET.get('table') or 'Students'
-    table_choice='Students'
-    if request.method == "GET":
+    # Request params
+    sort_by = request.GET.get('sort_by')
+    page_number = request.GET.get('page') or 1
+    page_number = int(page_number)
+    table = request.GET.get('table') or app_context['last_table'] or 'Students'
+
+    if request.method == "GET" and request.GET.get('table'):
         form = QueryTable(request.GET)
         if form.is_valid():
-            table_choice = form.cleaned_data['table_choice']
-            filter_table = form.cleaned_data['filter_table']
+            table = form.cleaned_data['table']
+            filter = form.cleaned_data['filter']
+            app_context['last_table'] = table
+            app_context['last_filter'] = filter
     else:
-        form = QueryTable()
-        
+        use_old_table = {'filter': app_context['last_filter'],
+                         'table': app_context['last_table']}
+        form = QueryTable(use_old_table)
 
-    if sort_by:
-        sort_by = toggle_sort(sort_by, app_context)
-        data, table_headers = get_objects_by_table_and_sort(table_choice, sort_by)
-        app_context['last_data'], app_context['last_headers'] = data, table_headers
-    elif not page_number or not app_context['last_data']:
-        data, table_headers = get_objects_by_table(table_choice)
-        page_number = 1
-        app_context['last_data'], app_context['last_headers'] = data, table_headers
-    else:
-        # This is the pagination case, just use the existing data.
+    if page_number != 1:
+        # pagination case, just use existing data
         data, table_headers = app_context['last_data'], app_context['last_headers']
+    elif sort_by:
+        sort_by = toggle_sort(sort_by, app_context)
+        data, table_headers = get_objects_by_table_and_sort(table, sort_by)
+        app_context['last_data'], app_context['last_headers'] = data, table_headers
+    else:
+        # first visit, no sorting
+        data, table_headers = get_objects_by_table(table)
+        app_context['last_data'], app_context['last_headers'] = data, table_headers
 
+    # Fix table headers to display values
     table_headers = string_display.get_strings_from_cache(table_headers, app_context)
 
     # paginator is 1-based indexing (yikes)
     paginator = Paginator(data, RESULTS_PER_PAGE)
+    pages = get_pagination_ranges(paginator, page_number)
     subset_data = paginator.page(page_number)
 
-    pages = get_pagination_ranges(paginator, int(page_number))
     return render(
         request, 'data_display/database_start_page.html',
-        {'data': subset_data, 'table_headers': table_headers, 'pages': pages, 'ui': app_context['ui_obj'], 'form':form}
+        {'data': subset_data, 'table_headers': table_headers, 'pages': pages, 'ui': app_context['ui_obj'], 'form': form}
     )
-
-
-def display_data(request):
-    # table = request.GET.get('tables')
-    # filter_table = request.GET.get('filter')
-
-    return render(request, 'data_display/database_start_page.html', {'example': example})
 
 
 # Should move this to a model-layer module (this is the resource layer)
@@ -101,9 +100,11 @@ def toggle_sort(sort_by, context):
         desc_sort = '-' + asc_sort
         context['last_sort'] = desc_sort
         context['ui_obj']['desc'] = sort_by
+        context['ui_obj']['asc'] = ''
         return desc_sort
     else:
         # first time we sort, or previous was desc (in which case column doesn't match), do nothing
         context['last_sort'] = asc_sort
         context['ui_obj']['asc'] = sort_by
+        context['ui_obj']['desc'] = ''
         return asc_sort
