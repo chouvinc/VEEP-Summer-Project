@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.staticfiles import finders
 from data_display.models import Students, Teams, Projects, NotForProfits, get_model_from_name
 from data_display.utils import string_display
-from data_display.settings import rows_per_page
+from veep_data_project.settings import rows_per_page
 
 from data_display.forms import QueryTable, SettingsForm, ImportSelectForm, ExportSelectForm, \
     IntersectionImportForm, \
@@ -16,6 +16,7 @@ app_context = {'last_table': "", 'last_filter': "", 'pagination_width': 2, 'last
                'last_sort': '', 'ui_obj': {'asc': '', 'desc': ''}, 'preview_data': [], 'display_string': {}}
 # this will be changed via settings view in the future
 RESULTS_PER_PAGE = 25
+
 
 def settings(request):
     if request.method == "GET":
