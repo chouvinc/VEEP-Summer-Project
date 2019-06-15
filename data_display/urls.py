@@ -4,8 +4,8 @@ from . import views
 from django.urls import path
 
 urlpatterns = [
-    path('settings', views.settings, name="settings"),
     path('', views.data_display, name="data_display"),
+    path('settings', views.settings, name="settings"),
     path('import_export', views.import_export, name='import_export'),
     path('import_export/<i_form>', views.import_export, name='import_export'),
     path('import_export/<e_form>', views.import_export, name='import_export'),
