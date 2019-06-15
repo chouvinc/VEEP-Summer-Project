@@ -1,0 +1,25 @@
+{% extends "data_display/base.html" %}
+
+{% block stylesheets %}
+{% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'data_display/style_site.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+{% endblock content %}
+
+{% block script %}
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-1.2.0.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.2.0.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-tables-1.2.0.min.css" type="text/css" />
+
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-1.2.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.2.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-tables-1.2.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-gl-1.2.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-api-1.2.0.min.js"></script>
+{{ div | safe }}
+{{ script | safe }}
+{% endblock script %}
+
+

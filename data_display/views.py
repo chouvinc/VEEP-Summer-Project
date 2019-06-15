@@ -1,5 +1,9 @@
+from bokeh.plotting import figure, output_file, show
+from bokeh.embed import components
+from bokeh.models import HoverTool
+from django.db.models import Count, Avg
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.contrib.staticfiles import finders
 from data_display.models import Students, Teams, Projects, NotForProfits
 from data_display.utils import string_display
@@ -23,6 +27,16 @@ def settings(request):
 
 
 # Create your views here.
+def visualizations(request):
+    x = [4,5]
+    y = [2,6]
+    plot = figure(title = 'Project Graph',
+                  x_axis_label='X', y_axis_label='Y',
+                  plot_width =400, plot_height=400)
+    plot.line(x, y, line_width=2)
+    script, div = components(plot)
+    return render(request,'data_display/visualizations.html', {'script' : script, 'div' : div})
+
 def data_display(request):
 
     # Add string display to our cache

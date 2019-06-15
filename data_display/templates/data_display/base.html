@@ -22,7 +22,7 @@
             <a href="settings"><li class="page">Settings</li></a>
             <a href="database"><li class="page">Database</li></a>
             <a href=""><li class="page">Summaries</li></a>
-            <a href=""><li class="page">Visualizations</li></a>
+            <a href="visualizations"><li class="page">Visualizations</li></a>
             <a href=""><li class="page">Import/Export</li></a>
         </ul>
     </div>
@@ -32,11 +32,10 @@
         {% block content %}
         {% endblock content %}
     </div>
-
-
+    {% block script %}
+    {% endblock script %}
     <div class="footer">
         <div class="center-content">Developed & Maintained by the VEEP Database Team &nbsp | &nbsp 2019 ©</div>
     </div>
-
     </body>
 </html>

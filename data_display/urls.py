@@ -5,5 +5,6 @@ from django.urls import path
 
 urlpatterns = [
     path('database', views.data_display, name='data_display'),
-    path('settings', views.settings, name = "settings" )
+    path('settings', views.settings, name = "settings" ),
+    path('visualizations',views.visualizations, name = 'visualizations')
 ]
