@@ -1,3 +1,7 @@
+.diff {
+    display: inline-block;
+}
+
 .floater {
     float: right;
     margin: 0;

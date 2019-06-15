@@ -3,6 +3,7 @@ from data_display.utils.constants import INDEPENDENT, INTERSECTION, UNION, MAP, 
 from data_display import models
 import inspect
 
+
 class QueryTable(forms.Form):
     table = forms.ChoiceField(label="table",
     choices=[('Students', 'Students'),
@@ -64,6 +65,11 @@ class ExportSelectForm(forms.Form):
                                              ('xls', 'xls'),
                                              ('txt', 'txt'),
                                              ('json', 'json')])
+
+
+class ConfirmThingForm(forms.Form):
+    confirmed = forms.RadioSelect(choices=[('yes', 'Yes'),
+                                           ('no', 'No')])
 
 
 def get_import_form_from_type(form_type):

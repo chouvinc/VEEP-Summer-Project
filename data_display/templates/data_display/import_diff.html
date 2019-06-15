@@ -12,19 +12,39 @@
 
 {# Some copy pasta from database display page, consider refactoring this later. #}
 {% block content %}
-    <table>
-        <tr>...</tr>
-        <tr>
-            {% for field_name in table_headers %}
-                <td>{{ field_name }}</td>
-            {% endfor %}
-        </tr>
-        {% for datum in data %}
+    <div class="diff">
+        <table>
+            <tr>...</tr>
             <tr>
-                {% for property in datum %}
-                <td> {{ property }} </td>
+                {% for field_name in table_headers %}
+                    <td>{{ field_name }}</td>
                 {% endfor %}
             </tr>
-        {% endfor %}
-    </table>
+            {% for datum in data %}
+                <tr>
+                    {% for property in datum %}
+                    <td> {{ property }} </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+     <div class="diff">
+        <table>
+            <tr>...</tr>
+            <tr>
+                {% for field_name in table_headers %}
+                    <td>{{ field_name }}</td>
+                {% endfor %}
+            </tr>
+            {% for datum in data %}
+                <tr>
+                    {% for property in datum %}
+                    <td> {{ property }} </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}
