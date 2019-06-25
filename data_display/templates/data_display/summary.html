@@ -1,0 +1,35 @@
+{% extends "data_display/base.html" %}
+
+{% block stylesheets %}
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'data_display/summaries.css' %}">
+<link rel="stylesheet" href="{% static 'data_display/style_site.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+<div>
+    <table>
+        <tr>Key Performance Indicators</tr>
+        <tr>
+            <td>Number of Successful Students</td>
+            <td>Average Project Completion</td>
+            <td>Number of NFP's</td>
+            <td>Number of Teams</td>
+        </tr>
+        <tr>
+            <td>{{ num_students }}</td>
+            <td>{{ proj_completion }}</td>
+            <td>{{ num_nfp }}</td>
+            <td>{{ num_teams }}</td>
+        </tr>
+    </table>
+</div>
+<div>
+    <form action = '/data_display/summaries' method = "GET">
+        {{ form }}
+        <input type = "submit">
+    </form>
+<div>
+    {{ table|safe}}
+</div>
+{% endblock content %}

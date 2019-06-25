@@ -86,3 +86,8 @@ def get_export_form_from_type(form_type):
     return {
         ESELECT: ExportSelectForm
     }[form_type]()
+
+class SummariesForm(forms.Form):
+    table = forms.ChoiceField(label="table",
+    choices=[('Students','Students'), ('Projects', 'Projects'), ('Teams', 'Teams'), ('Not For Profits', 'Not For Profits')])
+    

@@ -4,12 +4,13 @@ from django.contrib.staticfiles import finders
 from data_display.models import Students, Teams, Projects, NotForProfits, get_model_from_name
 from data_display.utils import string_display
 from veep_data_project.settings import rows_per_page
-
-from data_display.forms import QueryTable, SettingsForm, ImportSelectForm, ExportSelectForm, \
+from data_display.utils.summaries import get_data
+from data_display.forms import QueryTable, SettingsForm, SummariesForm, ImportSelectForm, ExportSelectForm, \
     IntersectionImportForm, \
     get_import_form_from_type, get_export_form_from_type
 from data_display.utils.constants import ISELECT, ESELECT
 from data_display.io import gs_import
+import pandas 
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
 app_context = {'last_table': "", 'last_filter': "", 'pagination_width': 2, 'last_data': [], 'last_headers': [],
@@ -17,6 +18,26 @@ app_context = {'last_table': "", 'last_filter': "", 'pagination_width': 2, 'last
 # this will be changed via settings view in the future
 RESULTS_PER_PAGE = 25
 
+
+def summaries(request):
+    table_name = "Students"
+
+    if request.method == "GET":
+        form = SummariesForm(request.GET)
+        if form.is_valid():
+            table_name = form.cleaned_data['table']
+    else:
+        form = SummariesForm()
+    
+    table = get_data(table_name)
+
+    num_students = get_data("Students")["Name"]["count"]
+    proj_completion = get_data("Projects")["Completion Rate"]["mean"].round(0)
+    num_nfp = get_data("Not For Profits")["Nfp Name"]["count"]
+    num_teams = get_data("Teams")["Team Name"]["count"]
+
+    return render(request, 'data_display/summary.html', {'form':form, 'table':table.to_html(), 
+    'num_students':num_students, 'proj_completion':proj_completion, 'num_nfp':num_nfp, 'num_teams':num_teams})
 
 def settings(request):
     if request.method == "GET":

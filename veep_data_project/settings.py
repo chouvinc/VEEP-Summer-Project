@@ -125,7 +125,11 @@ STATICFILES_DIRS = [
     '/var/www/static/',
 ]
 
+# used to store media files like images
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+# other app settings used in the website
 rows_per_page = 25 
+tables_updated = False
+

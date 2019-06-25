@@ -8,7 +8,7 @@
 {% block content %}
 {% load cust_tags %}
 <div>
-    <form action="/data_display/settings" method="GET">
+    <form action= '/data_display/settings' method="GET">
         {{ form }}
         <input type="submit">
         {% if form|is_valid %}
