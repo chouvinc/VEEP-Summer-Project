@@ -20,10 +20,10 @@
     <div class="header">
         <ul class="headerItems">
             <a href="settings"><li class="page">Settings</li></a>
-            <a href="database"><li class="page">Database</li></a>
-            <a href=""><li class="page">Summaries</li></a>
-            <a href=""><li class="page">Visualizations</li></a>
-            <a href=""><li class="page">Import/Export</li></a>
+            <a href="{% url 'data_display' %}"><li class="page">Database</li></a>
+            <a href="{% url 'data_display' %}summaries"><li class="page">Summaries</li></a>
+            <a href="{% url 'data_display' %}visualizations"><li class="page">Visualizations</li></a>
+            <a href="{% url 'data_display' %}import_export"><li class="page">Import/Export</li></a>
         </ul>
     </div>
 

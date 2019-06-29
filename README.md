@@ -61,4 +61,24 @@ Of the above only 1) is semi-built, but we plan to crank out lots of 2, 3, and 4
 
 ## User Guide (TBD)
 
+### Import/Export
+
+Import can support a couple of different formats from Google Sheets. They are:
+
+1) Independent - Import the given sheet as a new table with the defined columns as the table columns.
+Data within the sheet is validated to be made uniform -- if there are exceptions they are either converted,
+or deleted if unable to be converted.
+
+Eg. Given a "Year" column, if the given value was "\"3\"", it would successfully convert and be stored in 
+the database.
+
+2) Match Intersection - Import the given sheet as compared to another existing table within the database. 
+Only columns with names that form an exact match are imported into the existing table. Other un-matched columns are deleted.
+
+3) Match Union - Import the given sheet as compared to another existing table within the database. The new
+table will have both sets of columns.
+
+4) Map - Import the given sheet as compared to another existing table within the database. The new table 
+will have its data imported as defined by user mappings.
+
 ## Known Issues (TBD)

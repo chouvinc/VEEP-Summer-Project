@@ -1,0 +1,50 @@
+{% extends "data_display/base.html" %}
+
+{% block stylesheets %}
+{% load staticfiles %}
+<link rel="stylesheet" href="{% static 'data_display/import_export.css' %}">
+{% endblock stylesheets %}
+
+<p>
+    This is a preview of the data being imported. New rows that will be successfully imported are highlighted in green.
+    Rows that will be deleted due to wrong data type or other issues are highlighted in red.
+</p>
+
+{# Some copy pasta from database display page, consider refactoring this later. #}
+{% block content %}
+    <div class="diff">
+        <table>
+            <tr>...</tr>
+            <tr>
+                {% for field_name in table_headers %}
+                    <td>{{ field_name }}</td>
+                {% endfor %}
+            </tr>
+            {% for datum in data %}
+                <tr>
+                    {% for property in datum %}
+                    <td> {{ property }} </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+     <div class="diff">
+        <table>
+            <tr>...</tr>
+            <tr>
+                {% for field_name in table_headers %}
+                    <td>{{ field_name }}</td>
+                {% endfor %}
+            </tr>
+            {% for datum in data %}
+                <tr>
+                    {% for property in datum %}
+                    <td> {{ property }} </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
