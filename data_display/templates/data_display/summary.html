@@ -8,21 +8,7 @@
 
 {% block content %}
 <div>
-    <table>
-        <tr>Key Performance Indicators</tr>
-        <tr>
-            <td>Number of Successful Students</td>
-            <td>Average Project Completion</td>
-            <td>Number of NFP's</td>
-            <td>Number of Teams</td>
-        </tr>
-        <tr>
-            <td>{{ num_students }}</td>
-            <td>{{ proj_completion }}</td>
-            <td>{{ num_nfp }}</td>
-            <td>{{ num_teams }}</td>
-        </tr>
-    </table>
+    {{ kpi|safe }}
 </div>
 <div>
     <form action = '/data_display/summaries' method = "GET">
@@ -30,6 +16,6 @@
         <input type = "submit">
     </form>
 <div>
-    {{ table|safe}}
+    {{ summary|safe}}
 </div>
 {% endblock content %}

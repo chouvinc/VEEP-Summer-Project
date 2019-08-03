@@ -4,7 +4,7 @@ from django.contrib.staticfiles import finders
 from data_display.models import Students, Teams, Projects, NotForProfits, get_model_from_name
 from data_display.utils import string_display
 from veep_data_project.settings import rows_per_page
-from data_display.utils.summaries import get_data
+from data_display.utils.summaries import perf_indicator, get_data
 from data_display.forms import QueryTable, SettingsForm, SummariesForm, ImportSelectForm, ExportSelectForm, \
     IntersectionImportForm, \
     get_import_form_from_type, get_export_form_from_type
@@ -21,7 +21,7 @@ RESULTS_PER_PAGE = 25
 
 def summaries(request):
     table_name = "Students"
-
+    tables = ["Students", "Projects", "Not For Profits", "Teams"]
     if request.method == "GET":
         form = SummariesForm(request.GET)
         if form.is_valid():
@@ -29,15 +29,16 @@ def summaries(request):
     else:
         form = SummariesForm()
     
-    table = get_data(table_name)
+    data, table_headers = get_data(table_name)
+    data_frame = pandas.DataFrame(data, None, table_headers)
+    summary = data_frame.describe(include='all')
+    summary = summary.fillna("")
 
-    num_students = get_data("Students")["Name"]["count"]
-    proj_completion = get_data("Projects")["Completion Rate"]["mean"].round(0)
-    num_nfp = get_data("Not For Profits")["Nfp Name"]["count"]
-    num_teams = get_data("Teams")["Team Name"]["count"]
+    kpi = perf_indicator(tables)
+    kpi = pandas.DataFrame.from_dict(kpi)
 
-    return render(request, 'data_display/summary.html', {'form':form, 'table':table.to_html(), 
-    'num_students':num_students, 'proj_completion':proj_completion, 'num_nfp':num_nfp, 'num_teams':num_teams})
+    return render(request, 'data_display/summary.html', {'form':form, 'summary':summary.to_html(), 
+    'kpi':kpi.to_html(index=None)})
 
 def settings(request):
     if request.method == "GET":
