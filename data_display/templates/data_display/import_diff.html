@@ -12,28 +12,37 @@
 
 {# Some copy pasta from database display page, consider refactoring this later. #}
 {% block content %}
-    <div class="diff">
-        <table>
-            <tr>...</tr>
-            <tr>
-                {% for field_name in table_headers %}
-                    <td>{{ field_name }}</td>
-                {% endfor %}
-            </tr>
-            {% for datum in data %}
-                <tr>
-                    {% for property in datum %}
-                    <td> {{ property }} </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </table>
-    </div>
 
-     <div class="diff">
+    <h1>Existing Data (Left) vs. New Data (Right)</h1>
+    <p>
+        Displayed below is the last 50 records of the existing table versus the new set of data pulled from Google
+        Sheets. Please refer to the User Guide (link to be updated) to see how records are pulled for different
+        import types. If a column is missing, it means either the new column name did not match correctly
+        to the original column name, or the column was missing altogether.
+    </p>
+    <p>
+        Direct edits of the data will be possible in the future, so don't worry if the imported data isn't complete.
+    </p>
+    <span class="diff old">
         <table>
-            <tr>...</tr>
-            <tr>
+            <tr class="headers">
+                {% for field_name in old_headers%}
+                    <td>{{ field_name }}</td>
+                {% endfor %}
+            </tr>
+            {% for datum in old_data %}
+                <tr>
+                    {% for property in datum %}
+                    <td> {{ property }} </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </span>
+
+    <span class="diff new">
+        <table>
+            <tr class="headers">
                 {% for field_name in table_headers %}
                     <td>{{ field_name }}</td>
                 {% endfor %}
@@ -46,5 +55,13 @@
                 </tr>
             {% endfor %}
         </table>
+    </span>
+
+    <div class="confirm">
+        <form action='{% url 'import_export_preview' %}' method="POST">
+        {% csrf_token %}
+            {{ form }}
+            <input type = "submit">
+        </form>
     </div>
 {% endblock %}

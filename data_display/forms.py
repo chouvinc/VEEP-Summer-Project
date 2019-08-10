@@ -68,8 +68,9 @@ class ExportSelectForm(forms.Form):
 
 
 class ConfirmThingForm(forms.Form):
-    confirmed = forms.RadioSelect(choices=[('yes', 'Yes'),
-                                           ('no', 'No')])
+    confirmed = forms.BooleanField(required=True,
+                                   widget=forms.RadioSelect(choices=[('yes', 'Yes'),
+                                                                     ('no', 'No')]))
 
 
 def get_import_form_from_type(form_type):

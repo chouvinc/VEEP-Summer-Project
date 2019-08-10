@@ -6,15 +6,19 @@ from data_display.utils import string_display
 from veep_data_project.settings import rows_per_page
 from data_display.utils.summaries import perf_indicator, get_data
 from data_display.forms import QueryTable, SettingsForm, SummariesForm, ImportSelectForm, ExportSelectForm, \
-    IntersectionImportForm, \
+    IntersectionImportForm, ConfirmThingForm, \
     get_import_form_from_type, get_export_form_from_type
+
+from django.contrib import messages
 from data_display.utils.constants import ISELECT, ESELECT
 from data_display.io import gs_import
 import pandas 
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
+# also this is a terrible practice and I'm sorry for anyone who has to read this =(
 app_context = {'last_table': "", 'last_filter': "", 'pagination_width': 2, 'last_data': [], 'last_headers': [],
-               'last_sort': '', 'ui_obj': {'asc': '', 'desc': ''}, 'preview_data': [], 'display_string': {}}
+               'last_sort': '', 'ui_obj': {'asc': '', 'desc': ''}, 'preview_data': [], 'display_string': {},
+               'model': None}
 # this will be changed via settings view in the future
 RESULTS_PER_PAGE = 25
 
@@ -112,8 +116,20 @@ def import_export(request, i_form=ISELECT, e_form=ESELECT):
 
 
 def import_export_preview(request):
-    subset_data, table_headers = app_context['preview_data']
-    return render(request, 'data_display/import_diff.html', {'data': subset_data, 'table_headers': table_headers})
+    subset_data, table_headers, old_data, old_headers = app_context['preview_data']
+
+    if request.method == 'POST':
+        confirm_form = ConfirmThingForm(request.POST)
+        if confirm_form.is_valid() and confirm_form.cleaned_data['confirmed']:
+            gs_import.append_records_to_existing_table(app_context['model'], subset_data, table_headers, app_context)
+            messages.success(request, 'Added new data to table')
+            return redirect('import_export')
+    else:
+        confirm_form = ConfirmThingForm(request.POST)
+
+    return render(request, 'data_display/import_diff.html', {'data': subset_data, 'table_headers': table_headers,
+                                                             'old_data': old_data, 'old_headers': old_headers,
+                                                             'form': confirm_form})
 
 
 # === io form processing ===
@@ -139,8 +155,9 @@ def import_intersection(request):
             # then process the data according to gs_import
             intersect_import = gs_import.choose_import_type(form_type)
 
-            # save the preview data to the app context
+            # save the preview data to the app context, remember the model
             app_context['preview_data'] = intersect_import(new_data, selected_model, app_context)
+            app_context['model'] = selected_model
 
             return redirect('import_export_preview')
         else:
