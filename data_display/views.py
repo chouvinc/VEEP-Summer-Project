@@ -6,13 +6,15 @@ from data_display.utils import string_display
 from veep_data_project.settings import rows_per_page
 from data_display.utils.summaries import perf_indicator, get_data
 from data_display.forms import QueryTable, SettingsForm, SummariesForm, ImportSelectForm, ExportSelectForm, \
-    IntersectionImportForm, ConfirmThingForm, \
+    IntersectionImportForm, ConfirmThingForm, ExportCSVForm, \
     get_import_form_from_type, get_export_form_from_type
 
 from django.contrib import messages
 from data_display.utils.constants import ISELECT, ESELECT
 from data_display.io import gs_import
-import pandas 
+from data_display.io import export
+
+import pandas
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
 # also this is a terrible practice and I'm sorry for anyone who has to read this =(
@@ -43,6 +45,7 @@ def summaries(request):
 
     return render(request, 'data_display/summary.html', {'form':form, 'summary':summary.to_html(), 
     'kpi':kpi.to_html(index=None)})
+
 
 def settings(request):
     if request.method == "GET":
@@ -106,12 +109,16 @@ def data_display(request):
 
 
 def import_export(request, i_form=ISELECT, e_form=ESELECT):
+    print(i_form)
+    print(e_form)
+
     selected_i_form = get_import_form_from_type(i_form)
     selected_e_form = get_export_form_from_type(e_form)
+
     return render(request, 'data_display/import_export.html',
                   {
                       'i_form': selected_i_form, 'i_form_type': selected_i_form.form_type,
-                      'e_form': selected_e_form
+                      'e_form': selected_e_form, 'e_form_type': selected_e_form.form_type
                   })
 
 
@@ -133,6 +140,12 @@ def import_export_preview(request):
 
 
 # === io form processing ===
+# Why do we use this <import_or_export>_select format?
+
+# Vincent: use selection form to account for any pre-import or pre-export steps required for the selected form type
+# to be completed. For example, for an intersection import, we need to select an existing table AND an existing
+# google sheet. If the form doesn't require this step just redirect -- but this is in place to future-proof
+# additional functionality that we might want to add.
 def import_select(request):
     if request.method == "POST":
         form = ImportSelectForm(request.POST)
@@ -165,22 +178,23 @@ def import_intersection(request):
     return redirect('import_export', i_form=ISELECT)
 
 
-def import_data(request):
+def export_select(request):
     if request.method == "POST":
-        pass
-    else:
-        pass
+        form = ExportSelectForm(request.POST)
+        if form.is_valid():
+            return redirect('import_export', i_form=ISELECT, e_form=form.cleaned_data['export_type'])
+    return redirect('import_export', i_form=ISELECT, e_form=ESELECT)
 
-    return redirect('import_export')
 
-
-def export_data(request):
-    if request.method == "GET":
-        pass
-    else:
-        pass
-
-    return redirect('import_export')
+def export_csv(request):
+    if request.method == "POST":
+        form = ExportCSVForm(request.POST)
+        if form.is_valid():
+            selected_model = get_model_from_name(form.cleaned_data['existing_table'])
+            return export.export_as_csv(selected_model)
+        else:
+            print(form.errors)
+    return redirect('import_export', e_form=ESELECT)
 
 
 # Should move this to a model-layer module (this is the resource layer)
