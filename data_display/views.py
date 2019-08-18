@@ -1,13 +1,8 @@
 from django.core.paginator import Paginator
-<<<<<<< HEAD
-from django.shortcuts import render, redirect
-=======
-from django.shortcuts import render, render_to_response
->>>>>>> visualizations
+from django.shortcuts import render, redirect, render_to_response
 from django.contrib.staticfiles import finders
 from data_display.models import Students, Teams, Projects, NotForProfits, get_model_from_name
 from data_display.utils import string_display
-<<<<<<< HEAD
 from veep_data_project.settings import rows_per_page
 from data_display.utils.summaries import perf_indicator, get_data
 from data_display.forms import QueryTable, SettingsForm, SummariesForm, ImportSelectForm, ExportSelectForm, \
@@ -15,15 +10,13 @@ from data_display.forms import QueryTable, SettingsForm, SummariesForm, ImportSe
     get_import_form_from_type, get_export_form_from_type
 from data_display.utils.constants import ISELECT, ESELECT
 from data_display.io import gs_import
-import pandas 
-=======
+import pandas
 from data_display.forms import QueryTable, SettingsForm
 from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.transform import cumsum
 #from bokeh.palettes import all_palettes (unsolvedError)
 import pandas as pd
->>>>>>> visualizations
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
 app_context = {'last_table': "", 'last_filter': "", 'pagination_width': 2, 'last_data': [], 'last_headers': [],
