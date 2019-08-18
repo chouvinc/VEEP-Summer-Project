@@ -61,7 +61,7 @@ Of the above only 1) is semi-built, but we plan to crank out lots of 2, 3, and 4
 
 ## User Guide (TBD)
 
-Visualization:
+### Visualization:
 -User can Pan, Zoom, Save and Reset the graph by using the Bokeh Tools on the right of each plot.
 -The four plots shown are:
 1. Multiple Line: Annual VEEP Statistics from 2016 to 2019
@@ -71,6 +71,6 @@ Visualization:
 
 ## Known Issues (TBD)
 
-Visualization:
+### Visualization:
 -Cannot resolve the error by passion "from bokeh.palettes import all_palettes "
 -Need to replace the testing data with actual imported data
