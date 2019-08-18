@@ -9,17 +9,23 @@
 {% endblock content %}
 
 {% block script %}
-    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-1.2.0.min.css" type="text/css" />
-    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.2.0.min.css" type="text/css" />
-    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-tables-1.2.0.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-1.3.4.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.3.4.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-tables-1.3.4.min.css" type="text/css" />
 
-    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-1.2.0.min.js"></script>
-    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.2.0.min.js"></script>
-    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-tables-1.2.0.min.js"></script>
-    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-gl-1.2.0.min.js"></script>
-    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-api-1.2.0.min.js"></script>
-    {{ div | safe }}
-    {{ script | safe }}
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-1.3.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.3.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-tables-1.3.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-gl-1.3.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-api-1.3.4.min.js"></script>
+
+    <ul>
+        <a>{{ div1 | safe }} {{ script1 | safe }}</a>
+        <a>{{ div2 | safe }} {{ script2 | safe }}</a>
+        <a>{{ div3 | safe }} {{ script3 | safe }}</a>
+        <a>{{ div4 | safe }} {{ script4 | safe }}</a>
+    </ul>
+
 {% endblock script %}
 
 
