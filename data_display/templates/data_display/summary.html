@@ -2,18 +2,20 @@
 
 {% block stylesheets %}
 {% load staticfiles %}
+<link rel="stylesheet" href="{% static 'data_display/summaries.css' %}">
 <link rel="stylesheet" href="{% static 'data_display/style_site.css' %}">
 {% endblock stylesheets %}
 
 {% block content %}
-{% load cust_tags %}
 <div>
-    <form action= '/data_display/settings' method="GET">
+    {{ kpi|safe }}
+</div>
+<div>
+    <form action = '/data_display/summaries' method = "GET">
         {{ form }}
-        <input type="submit">
-        {% if form|is_valid %}
-            <p>Your settings have been configured. You can now visit other pages on the website.</p>
-        {% endif %}
+        <input type = "submit">
     </form>
+<div>
+    {{ summary|safe}}
 </div>
 {% endblock content %}

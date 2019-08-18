@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-from data_display.forms import SettingsForm
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -126,7 +125,11 @@ STATICFILES_DIRS = [
     '/var/www/static/',
 ]
 
+# used to store media files like images
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+# other app settings used in the website
 rows_per_page = 25 
+tables_updated = False
+

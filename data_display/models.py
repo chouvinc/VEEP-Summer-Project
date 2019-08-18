@@ -1,7 +1,9 @@
 from django.db import models
+import data_display.utils.constants as constants
 
 # Create your models here.
 photo = models.ImageField(upload_to="gallery")
+
 
 class Students(models.Model):
     student_id = models.IntegerField()
@@ -35,3 +37,11 @@ class NotForProfits(models.Model):
     num_projects_completed = models.IntegerField()
     primary_email = models.CharField(max_length=200)
 
+
+def get_model_from_name(model_name):
+    return {
+        constants.STUDENTS: Students,
+        constants.TEAMS: Teams,
+        constants.PROJECTS: Projects,
+        constants.NFPS: NotForProfits
+    }[model_name]

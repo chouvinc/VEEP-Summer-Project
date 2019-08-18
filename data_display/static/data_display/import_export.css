@@ -1,0 +1,26 @@
+.diff {
+    display: inline-block;
+}
+
+.floater {
+    float: right;
+    margin: 0;
+}
+
+.info-text {
+    padding: 50px;
+    background-color: #eeeeee;
+    border-radius: 5px;
+}
+
+.info-text-title {
+    margin: 0;
+}
+
+.io-form {
+    padding: 50px;
+}
+
+.io-form input {
+    border-radius: 10px;
+}

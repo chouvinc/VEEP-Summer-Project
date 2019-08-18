@@ -1,15 +1,44 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.staticfiles import finders
-from data_display.models import Students, Teams, Projects, NotForProfits
+from data_display.models import Students, Teams, Projects, NotForProfits, get_model_from_name
 from data_display.utils import string_display
-from data_display.forms import QueryTable, SettingsForm
 from veep_data_project.settings import rows_per_page
+from data_display.utils.summaries import perf_indicator, get_data
+from data_display.forms import QueryTable, SettingsForm, SummariesForm, ImportSelectForm, ExportSelectForm, \
+    IntersectionImportForm, \
+    get_import_form_from_type, get_export_form_from_type
+from data_display.utils.constants import ISELECT, ESELECT
+from data_display.io import gs_import
+import pandas 
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
-app_context = {'last_table': "", 'last_filter': "", 'pagination_width': 2, 'last_data': [], 'last_headers': [], 'last_sort': '',
-               'ui_obj': {'asc': '', 'desc': ''}}
-FIRST = True
+app_context = {'last_table': "", 'last_filter': "", 'pagination_width': 2, 'last_data': [], 'last_headers': [],
+               'last_sort': '', 'ui_obj': {'asc': '', 'desc': ''}, 'preview_data': [], 'display_string': {}}
+# this will be changed via settings view in the future
+RESULTS_PER_PAGE = 25
+
+
+def summaries(request):
+    table_name = "Students"
+    tables = ["Students", "Projects", "Not For Profits", "Teams"]
+    if request.method == "GET":
+        form = SummariesForm(request.GET)
+        if form.is_valid():
+            table_name = form.cleaned_data['table']
+    else:
+        form = SummariesForm()
+    
+    data, table_headers = get_data(table_name)
+    data_frame = pandas.DataFrame(data, None, table_headers)
+    summary = data_frame.describe(include='all')
+    summary = summary.fillna("")
+
+    kpi = perf_indicator(tables)
+    kpi = pandas.DataFrame.from_dict(kpi)
+
+    return render(request, 'data_display/summary.html', {'form':form, 'summary':summary.to_html(), 
+    'kpi':kpi.to_html(index=None)})
 
 def settings(request):
     if request.method == "GET":
@@ -70,6 +99,71 @@ def data_display(request):
         request, 'data_display/database_start_page.html',
         {'data': subset_data, 'table_headers': table_headers, 'pages': pages, 'ui': app_context['ui_obj'], 'form': form}
     )
+
+
+def import_export(request, i_form=ISELECT, e_form=ESELECT):
+    selected_i_form = get_import_form_from_type(i_form)
+    selected_e_form = get_export_form_from_type(e_form)
+    return render(request, 'data_display/import_export.html',
+                  {
+                      'i_form': selected_i_form, 'i_form_type': selected_i_form.form_type,
+                      'e_form': selected_e_form
+                  })
+
+
+def import_export_preview(request):
+    subset_data, table_headers = app_context['preview_data']
+    return render(request, 'data_display/import_diff.html', {'data': subset_data, 'table_headers': table_headers})
+
+
+# === io form processing ===
+def import_select(request):
+    if request.method == "POST":
+        form = ImportSelectForm(request.POST)
+        if form.is_valid():
+            return redirect('import_export', i_form=form.cleaned_data['import_type'])
+    return redirect('import_export', i_form=ISELECT)
+
+
+def import_intersection(request):
+    if request.method == "POST":
+        form = IntersectionImportForm(request.POST)
+        if form.is_valid():
+            selected_model = get_model_from_name(form.cleaned_data['existing_table'])
+            form_type = form.form_type
+            gsheet_url = form.cleaned_data['url']
+
+            # first get the new data
+            new_data = gs_import.get_data_from(gsheet_url)
+
+            # then process the data according to gs_import
+            intersect_import = gs_import.choose_import_type(form_type)
+
+            # save the preview data to the app context
+            app_context['preview_data'] = intersect_import(new_data, selected_model, app_context)
+
+            return redirect('import_export_preview')
+        else:
+            print(form.errors)
+    return redirect('import_export', i_form=ISELECT)
+
+
+def import_data(request):
+    if request.method == "POST":
+        pass
+    else:
+        pass
+
+    return redirect('import_export')
+
+
+def export_data(request):
+    if request.method == "GET":
+        pass
+    else:
+        pass
+
+    return redirect('import_export')
 
 
 # Should move this to a model-layer module (this is the resource layer)
