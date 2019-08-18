@@ -1,8 +1,13 @@
 from django.core.paginator import Paginator
+<<<<<<< HEAD
 from django.shortcuts import render, redirect
+=======
+from django.shortcuts import render, render_to_response
+>>>>>>> visualizations
 from django.contrib.staticfiles import finders
 from data_display.models import Students, Teams, Projects, NotForProfits, get_model_from_name
 from data_display.utils import string_display
+<<<<<<< HEAD
 from veep_data_project.settings import rows_per_page
 from data_display.utils.summaries import perf_indicator, get_data
 from data_display.forms import QueryTable, SettingsForm, SummariesForm, ImportSelectForm, ExportSelectForm, \
@@ -11,6 +16,14 @@ from data_display.forms import QueryTable, SettingsForm, SummariesForm, ImportSe
 from data_display.utils.constants import ISELECT, ESELECT
 from data_display.io import gs_import
 import pandas 
+=======
+from data_display.forms import QueryTable, SettingsForm
+from bokeh.plotting import figure
+from bokeh.embed import components
+from bokeh.transform import cumsum
+#from bokeh.palettes import all_palettes (unsolvedError)
+import pandas as pd
+>>>>>>> visualizations
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
 app_context = {'last_table': "", 'last_filter': "", 'pagination_width': 2, 'last_data': [], 'last_headers': [],
@@ -57,7 +70,7 @@ def data_display(request):
     # Add string display to our cache
     string_display.cache_display_strings(finders.find('string_conversion.json'), app_context)
 
-    # Request params
+    # Request paramsz
     sort_by = request.GET.get('sort_by')
     page_number = request.GET.get('page') or 1
     page_number = int(page_number)
@@ -212,3 +225,66 @@ def toggle_sort(sort_by, context):
         context['ui_obj']['asc'] = sort_by
         context['ui_obj']['desc'] = ''
         return asc_sort
+
+def visualizations(request):
+    #Testing data list
+    student_year = ['1','2','3','PEY','4']
+    num_of_sy = [4,12,9,5,8]
+
+    year_of_project = [2016,2017,2018,2019]
+    num_of_student = [13,20,32,36]
+    num_of_project = [3,4,5,6]
+    num_of_client = [2,3,4,6]
+    num_of_advisor = [0,1,0,3]
+
+    student_disciplines = {'EngSci':3,'TrackOne':7,'Chem':4,'Civ':1,'ECE':5,'Indy':8,'Material':2,'Mech':4,'Min':1}
+
+    project_name = ['project_1','project_2','project_3','project_4','project_5','project_6']
+    completion_rate = [0.2, 0.5, 0.7, 0.4, 0.6, 0.4]
+
+    #Palattes: color codes, can be eliminated once successfully import all_palattes
+    Viridis5 = ['#440154', '#3B518A', '#208F8C', '#5BC862', '#FDE724']
+    BuGn6 = ["#006d2c", "#2ca25f", "#66c2a4", "#99d8c9", "#ccece6", "#edf8fb"]
+    BuPu9 = ["#4d004b", "#810f7c", "#88419d", "#8c6bb1", "#8c96c6", "#9ebcda", "#bfd3e6", "#e0ecf4", "#f7fcfd"]
+    magma6 = ['#000003', '#3B0F6F', '#8C2980', '#DD4968', '#FD9F6C', '#FBFCBF']
+
+    #1. Muliple Line Plot
+    plot1 = figure(title = 'Annual VEEP Statistics from 2016 to 2019', plot_width=500, plot_height=400)
+    plot1.line(year_of_project, num_of_student, line_color=Viridis5[1],line_width=4,legend='students')
+    plot1.line(year_of_project, num_of_project, line_color=Viridis5[3],line_width=4,legend='projects')
+    plot1.line(year_of_project, num_of_client, line_color=Viridis5[2],line_width=4,legend='clients')
+    plot1.line(year_of_project, num_of_advisor, line_color=Viridis5[0],line_width=4,legend='advisors')
+    plot1.xaxis.ticker=year_of_project
+
+    #2. Vertical Bar Plot
+    plot2 = figure(title = 'VEEP Students Distribution by Year of Study in 2019', x_range = student_year, plot_width=500, plot_height=400)
+    plot2.vbar(x = student_year, top = num_of_sy, width=0.4, color = magma6)
+
+    #3. Horizontal Bar Plot
+    plot3 = figure(title = 'VEEP Projects Completion Rate in 2019', y_range = project_name, plot_width =500, plot_height=400)
+    plot3.hbar(y = project_name, right = completion_rate, height=0.4, color=BuGn6)
+
+    #4. Wedge plot
+    student_disciplines = pd.Series(student_disciplines).reset_index(name='value').rename(columns={'index':'disciplines'})
+    student_disciplines['angle'] = student_disciplines['value']/student_disciplines['value'].sum()*2*3.1415926
+    student_disciplines['color'] = BuPu9
+
+    plot4 = figure(title = 'VEEP Students Distribution by Disciplines in 2019', plot_width =500, plot_height=400,
+                   tools='hover',tooltips="@disciplines:@value", x_range = (-0.5,1.0))
+    plot4.wedge(x=0, y=1, radius=0.4,
+                start_angle=cumsum('angle',include_zero=True),end_angle = cumsum('angle'),
+                line_color="white",fill_color='color',legend='disciplines',source=student_disciplines)
+    plot4.axis.axis_label=None
+    plot4.axis.visible=False
+    plot4.grid.grid_line_color = None
+
+    #Note: "div_number" and "script_number" need to match the divs and scripts in visualization.html file
+    script1, div1 = components(plot1)
+    script2, div2 = components(plot2)
+    script3, div3 = components(plot3)
+    script4, div4 = components(plot4)
+    return render_to_response('data_display/visualizations.html',
+              {"div1": div1,"script1" : script1,
+               "div2": div2, "script2" : script2,
+               "div3": div3, "script3" : script3,
+               "div4": div4, "script4" :script4})

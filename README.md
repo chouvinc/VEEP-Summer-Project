@@ -61,6 +61,7 @@ Of the above only 1) is semi-built, but we plan to crank out lots of 2, 3, and 4
 
 ## User Guide (TBD)
 
+<<<<<<< HEAD
 ### Import/Export
 
 Import can support a couple of different formats from Google Sheets. They are:
@@ -82,3 +83,18 @@ table will have both sets of columns.
 will have its data imported as defined by user mappings.
 
 ## Known Issues (TBD)
+=======
+### Visualization:
+-User can Pan, Zoom, Save and Reset the graph by using the Bokeh Tools on the right of each plot.
+-The four plots shown are:
+1. Multiple Line: Annual VEEP Statistics from 2016 to 2019
+2. Vertical Bar: VEEP StudentS Distribution by Year of Study in 2019
+3. Pie/Wedge: VEEP Students Distribution by Disciplines in 2019
+4. Horizontal Bar: VEEP Project Completion Rate in 2019
+
+## Known Issues (TBD)
+
+### Visualization:
+-Cannot resolve the error by passion "from bokeh.palettes import all_palettes "
+-Need to replace the testing data with actual imported data
+>>>>>>> visualizations

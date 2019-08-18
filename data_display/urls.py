@@ -4,6 +4,7 @@ from . import views
 from django.urls import path
 
 urlpatterns = [
+<<<<<<< HEAD
     path('', views.data_display, name="data_display"),
     path('settings', views.settings, name="settings"),
     path('import_export', views.import_export, name='import_export'),
@@ -15,3 +16,9 @@ urlpatterns = [
     path('export_data', views.export_data, name='export_data'),
     path('summaries', views.summaries, name = "summaries")
 ]
+=======
+    path('database', views.data_display, name='data_display'),
+    path('settings', views.settings, name = "settings" ),
+    path('visualizations',views.visualizations, name = 'visualizations')
+]
+>>>>>>> visualizations
