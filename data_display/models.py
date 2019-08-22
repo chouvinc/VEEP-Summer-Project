@@ -6,14 +6,29 @@ photo = models.ImageField(upload_to="gallery")
 
 
 class Students(models.Model):
-    student_id = models.IntegerField()
-    name = models.CharField(max_length=200)
-    email = models.CharField(max_length=200)
-    discipline = models.CharField(max_length=200)
-    year = models.CharField(max_length=200)
-    phone = models.IntegerField(default=0)
-    interview_offer = models.BooleanField(null=True, default=None)
-    project_name = models.CharField(max_length=200)
+    student_id = models.IntegerField(default=-1)
+    name = models.CharField(max_length=200, default='N/A')
+    email = models.CharField(max_length=200, default='N/A')
+    discipline = models.CharField(max_length=200, default='N/A')
+    year = models.CharField(max_length=200, default='N/A')
+    phone = models.CharField(max_length=200, default=-1)
+    interview_offer = models.BooleanField(null=True, default=False)
+    project_name = models.CharField(max_length=200, default='N/A')
+
+    # clean data that might be a little different/wrong type, but semantically correct
+    def transform_data(self):
+        # Generally if someone did get an interview, the only 'Truthy' value that means false is 'No'.
+        if not isinstance(self.interview_offer, bool):
+            if self.interview_offer != 'No' and self.interview_offer:
+                self.interview_offer = True
+            elif self.interview_offer:
+                self.interview_offer = False
+
+    # make sure that clean is called before we save,
+    # (clean is called in full_clean: https://stackoverflow.com/questions/7366363/adding-custom-django-model-validation)
+    def save(self, *args, **kwargs):
+        self.transform_data()
+        super(Students, self).save(*args, **kwargs)
 
 
 class Teams(models.Model):

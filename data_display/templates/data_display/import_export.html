@@ -46,7 +46,8 @@
         </div>
 
         <div class="io-form">
-            <form action='{% url 'data_display' %}{{ e_form_type }}' method="GET">
+            <form action='{% url 'data_display' %}{{ e_form_type }}' method="POST">
+                {% csrf_token %}
                 {{ e_form }}
                 <input type = "submit">
             </form>

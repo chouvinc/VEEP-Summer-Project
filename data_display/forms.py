@@ -1,7 +1,34 @@
 from django import forms
-from data_display.utils.constants import INDEPENDENT, INTERSECTION, UNION, MAP, ISELECT, ESELECT
+from data_display.utils.constants import INDEPENDENT, INTERSECTION, UNION, MAP, ISELECT, ESELECT, CSV
 from data_display import models
 import inspect
+
+
+def populate_choices_from_existing_tables():
+    # populate choices fields from models
+    choices = []
+    for key, val in models.__dict__.items():
+        if inspect.isclass(val):
+            choices.append((key, key))
+
+    return choices
+
+
+def get_import_form_from_type(form_type):
+    return {
+        ISELECT: ImportSelectForm,
+        INDEPENDENT: IndependentImportForm,
+        INTERSECTION: IntersectionImportForm,
+        UNION: UnionImportForm,
+        MAP: MapImportForm
+    }[form_type]()
+
+
+def get_export_form_from_type(form_type):
+    return {
+        ESELECT: ExportSelectForm,
+        CSV: ExportCSVForm
+    }[form_type]()
 
 
 class QueryTable(forms.Form):
@@ -39,11 +66,7 @@ class IndependentImportForm(ImportForm):
 class IntersectionImportForm(ImportForm):
     form_type = INTERSECTION
 
-    # populate choices fields from models
-    choices = []
-    for key, val in models.__dict__.items():
-        if inspect.isclass(val):
-            choices.append((key, key))
+    choices = populate_choices_from_existing_tables()
 
     existing_table = forms.ChoiceField(label='Existing Table',
                                        choices=choices)
@@ -60,34 +83,30 @@ class MapImportForm(ImportForm):
 
 
 class ExportSelectForm(forms.Form):
-    file_format = forms.ChoiceField(label="File Type",
-                                    choices=[('csv', 'csv'),
+    form_type = ESELECT
+    export_type = forms.ChoiceField(label="File Type",
+                                    choices=[(CSV, 'csv'),
                                              ('xls', 'xls'),
                                              ('txt', 'txt'),
                                              ('json', 'json')])
 
 
+class ExportCSVForm(forms.Form):
+    form_type = CSV
+
+    choices = populate_choices_from_existing_tables()
+
+    existing_table = forms.ChoiceField(label='Existing Table',
+                                       choices=choices)
+
+
 class ConfirmThingForm(forms.Form):
-    confirmed = forms.RadioSelect(choices=[('yes', 'Yes'),
-                                           ('no', 'No')])
+    confirmed = forms.BooleanField(required=True,
+                                   widget=forms.RadioSelect(choices=[('yes', 'Yes'),
+                                                                     ('no', 'No')]))
 
-
-def get_import_form_from_type(form_type):
-    return {
-        ISELECT: ImportSelectForm,
-        INDEPENDENT: IndependentImportForm,
-        INTERSECTION: IntersectionImportForm,
-        UNION: UnionImportForm,
-        MAP: MapImportForm
-    }[form_type]()
-
-
-def get_export_form_from_type(form_type):
-    return {
-        ESELECT: ExportSelectForm
-    }[form_type]()
 
 class SummariesForm(forms.Form):
     table = forms.ChoiceField(label="table",
-    choices=[('Students','Students'), ('Projects', 'Projects'), ('Teams', 'Teams'), ('Not For Profits', 'Not For Profits')])
-    
+                              choices=[('Students', 'Students'), ('Projects', 'Projects'), ('Teams', 'Teams'),
+                                       ('Not For Profits', 'Not For Profits')])

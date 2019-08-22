@@ -39,33 +39,47 @@ def intersection_import(new_data, existing_model, app_context):
 
     # Get the headers of both sets of data
     existing_model_headers = get_strings_from_cache(existing_model._meta.get_fields(), app_context)
-    new_model_headers = new_data[0]
-
-    print(len(new_data))
-    print(len(new_data[0]))
 
     list_len = len(new_data[0])
+    indices_to_include = set()
+    headers_to_include = []
+    headers_already_included = set()
 
-    # for i in range(list_len):
-    #     # list isn't sorted, best we can do is O(n^2)
-    #     for old_header in existing_model_headers:
-    #         # append '-' to the header to designate deletion on the UI if headers don't match fuzzy ratio
-    #         # for more information on fuzzywuzzy see: https://stackoverflow.com/questions/10383044/fuzzy-string-comparison
-    #         if fuzz.partial_ratio(new_data[0][i], old_header) > 90:
-    #             print(new_data[0][i])
-    #         else:
-    #             delete_column(new_data, i)
-    #             # now check if we're about to go over the length
-    #             if i >= len(new_data) - 1:
-    #                 break
+    for i in range(list_len):
+        # list isn't sorted, best we can do is O(n^2)
+        for old_header in existing_model_headers:
+            # append '-' to the header to designate deletion on the UI if headers don't match fuzzy ratio
+            # for more information on fuzzywuzzy see:
+            # https://stackoverflow.com/questions/10383044/fuzzy-string-comparison
+
+            # TODO: mess around with this weighted average for better performance
+            # For reference: ratio is an exact match (length considered), while partial_ratio matches substrings.
+            match_weighted_avg = (fuzz.ratio(new_data[0][i], old_header)
+                                  + fuzz.partial_ratio(new_data[0][i], old_header))/2
+
+            if match_weighted_avg > 60 and old_header not in headers_already_included:
+                indices_to_include.add(i)
+                headers_to_include.append(old_header)
+                headers_already_included.add(old_header)
+
+    # Fix the new data so we only get columns close to the existing table
+    new_data = copy_without_columns(new_data, indices_to_include)
 
     # Return the new data (show the end of the old data and the part of the new inserted data)
-    return new_data[1::], new_model_headers
+    return new_data[1:], headers_to_include, last_n, existing_model_headers
 
 
-def delete_column(arr, index):
-    for row in arr:
-        del row[index]
+def copy_without_columns(arr, indices_set):
+    new_table = []
+
+    for i in range(1, len(arr)):
+        new_row = []
+        for j in range(len(arr[i])):
+            if j in indices_set:
+                new_row.append(arr[i][j])
+        new_table.append(new_row)
+
+    return new_table
 
 
 def union_import():
@@ -135,6 +149,16 @@ def validate_login():
 
 def _get_id_from_url(url):
     return re.search('[-\w]{25,}', url)
+
+
+def append_records_to_existing_table(table, data, headers, app_context):
+    column_headers = get_strings_from_cache(headers, app_context)
+    for row_data in data:
+        data_as_dict = dict(zip(column_headers, row_data))
+
+        # build a new object for the model
+        t = table(**data_as_dict)
+        t.save()
 
 
 # Test script copied from quick start
