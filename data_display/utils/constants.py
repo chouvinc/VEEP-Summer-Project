@@ -7,6 +7,7 @@
 '''
 
 # Try to keep these in alphabetical order if possible.
+CSV = 'export_csv'
 ESELECT = 'export_select'
 ISELECT = 'import_select'
 INDEPENDENT = 'import_independent'

@@ -1,5 +1,10 @@
 .diff {
-    display: inline-block;
+    display: inline-flex;
+    padding: 10px;
+}
+
+.diff td {
+    padding: 2 10px;
 }
 
 .floater {
@@ -23,4 +28,17 @@
 
 .io-form input {
     border-radius: 10px;
+}
+
+.headers {
+    background-color: pink;
+    font-weight: bolder;
+}
+
+.old {
+    background-color: #ebebeb;
+}
+
+.new {
+    background-color: #a9ff91;
 }

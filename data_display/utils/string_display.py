@@ -54,11 +54,12 @@ def convert_display_strings(path, string_list):
 
 
 # Cache the dict in the app context so we don't have to use file i/o that often
-def cache_display_strings(path, context):
+def cache_display_strings(path, context=None):
     with open(path, 'r') as map_file:
         map_obj = json.load(map_file)
 
-    context['display_string'] = map_obj
+    if context:
+        context['display_string'] = map_obj
 
 
 def write_cache_to_file(path, context):
@@ -69,7 +70,7 @@ def write_cache_to_file(path, context):
         json.dump(context['display_string'], map_file)
 
 
-def get_strings_from_cache(string_list, context):
+def get_strings_from_cache(string_list, context=None):
     strings_to_update_json = []
     display_strings = []
 
@@ -77,10 +78,10 @@ def get_strings_from_cache(string_list, context):
         # We're using _meta from Model, which will give a bunch of periods eg. Model.Table.columnproperty
         # Since we only want columnproperty, split & select the last part.
         column_name = str(string).rsplit('.', 1)[-1]
-        if column_name not in context['display_string']:
+        if not context or column_name not in context['display_string']:
             strings_to_update_json.append(column_name)
             display_strings.append(strip_and_capitalize(column_name))
-        else:
+        elif context:
             display_strings.append(context['display_string'][column_name])
 
     # if this isn't empty remember to update our json for next app startup
