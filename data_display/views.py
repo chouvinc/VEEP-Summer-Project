@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 from django.contrib.staticfiles import finders
 from data_display.models import Students, Teams, Projects, NotForProfits, get_model_from_name
 from data_display.utils import string_display
@@ -12,9 +12,13 @@ from data_display.forms import QueryTable, SettingsForm, SummariesForm, ImportSe
 from django.contrib import messages
 from data_display.utils.constants import ISELECT, ESELECT
 from data_display.io import gs_import
+import pandas
+from data_display.forms import QueryTable, SettingsForm
 from data_display.io import export
 
-import pandas
+from data_display.vi import graphs
+from django.db.models import Count
+
 
 # TODO: There should be a native app context that Django offers. Store everything we store here there instead.
 # also this is a terrible practice and I'm sorry for anyone who has to read this =(
@@ -64,7 +68,7 @@ def data_display(request):
     # Add string display to our cache
     string_display.cache_display_strings(finders.find('string_conversion.json'), app_context)
 
-    # Request params
+    # Request paramsz
     sort_by = request.GET.get('sort_by')
     page_number = request.GET.get('page') or 1
     page_number = int(page_number)
@@ -243,3 +247,34 @@ def toggle_sort(sort_by, context):
         context['ui_obj']['asc'] = sort_by
         context['ui_obj']['desc'] = ''
         return asc_sort
+
+
+def visualizations(request):
+    #examaple of a bar graph:
+    year = graphs.get_distinct('Students','year')
+    students_by_year = graphs.count_by('Students','year')
+
+    plot1 = graphs.bar(year, students_by_year, 'Year of Study','Number of Students',0.4)
+
+    #example of a line graph:
+    project_name = graphs.get_distinct('Projects','project_name')
+    completion_rate = graphs.get_distinct('Projects','completion_rate')
+
+    plot2 = graphs.line(project_name, completion_rate, 'Projects Name', 'Completion Rate', 'purple', 2)
+
+    #exapmle of a wedge graph:
+
+    ##TODO: complete the fucntion get_wedge_data that returns the same type of dataset as student_disciplines
+    student_disciplines ={'EngSci':3,'TrackOne':7,'Chem':4,'Civ':1,'ECE':5,'Indy':8,'Material':2,'Mech':4,'Min':1}
+
+    plot3 = graphs.wedge(student_disciplines, 'Students Distribution by Disciplines')
+
+    #'div#' and 'script#' must match the 'div#' and 'script#' in the data_display.visualizations.html file
+    #if you want to add another plot4, should add "script4, div4" in both this fiel and visualizations.html
+    script1, div1 = plot1
+    script2, div2 = plot2
+    script3, div3 = plot3
+    return render_to_response('data_display/visualizations.html',
+              {"div1": div1, "script1" : script1,
+               "div2": div2, "script2" : script2,
+               "div3": div3, "script3" : script3})

@@ -81,6 +81,15 @@ table will have both sets of columns.
 4) Map - Import the given sheet as compared to another existing table within the database. The new table 
 will have its data imported as defined by user mappings.
 
-## Known Issues (TBD)
+### Visualization:
+User can Pan, Zoom, Save and Reset the graph by using the Bokeh Tools on the right of each plot.
 
+The three types of plots and sample plots are:
+1. Line: Number of Student by Year of Study
+
+2. Bar: Completion Rate by Project
+
+3. Pie/Wedge: Student Distribution by Disciplines
+
+## Known Issues (TBD)
 

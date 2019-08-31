@@ -1,0 +1,30 @@
+{% extends "data_display/base.html" %}
+
+{% block stylesheets %}
+{% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'data_display/style_site.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+{% endblock content %}
+
+{% block script %}
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-1.3.4.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.3.4.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-tables-1.3.4.min.css" type="text/css" />
+
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-1.3.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.3.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-tables-1.3.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-gl-1.3.4.min.js"></script>
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-api-1.3.4.min.js"></script>
+
+    <ul>
+        <a>{{ div1 | safe }} {{ script1 | safe }}</a>
+        <a>{{ div2 | safe }} {{ script2 | safe }}</a>
+        <a>{{ div3 | safe }} {{ script3 | safe }}</a>
+    </ul>
+
+{% endblock script %}
+
+

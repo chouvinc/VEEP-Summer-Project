@@ -15,6 +15,7 @@ urlpatterns = [
     path('import_select', views.import_select, name='import_select'),
     path('import_intersection', views.import_intersection, name='import_intersection'),
     path('import_export_preview', views.import_export_preview, name='import_export_preview'),
+    path('visualizations',views.visualizations, name = 'visualizations'),
     path('export_select', views.export_select, name='export_select'),
     path('export_csv', views.export_csv, name='export_csv'),
     path('summaries', views.summaries, name = "summaries")
